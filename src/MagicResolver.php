@@ -20,6 +20,6 @@ abstract class MagicResolver
 
     public function __get($property)
     {
-        return $this->get();
+        return $this->get($property);
     }
 }

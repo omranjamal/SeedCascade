@@ -8,7 +8,12 @@ class Inheriter extends MagicResolver
         if ($this->offset === 0) {
             return null;
         } else {
-            return $seeder->resolveValue($this->i, $property, $offset-1, $this->blocks);
+            return $this->seeder->resolveValue(
+                $this->i,
+                $property,
+                $this->offset-1,
+                $this->blocks
+            );
         }
     }
 }

@@ -25,23 +25,23 @@ abstract class SeedCascade extends Seeder
 	 */
 	protected function xrange($start, $limit, $step = 1)
 	{
-	if ($start < $limit) {
-		if ($step <= 0) {
-			throw new LogicException('Step must be +ve');
-		}
+		if ($start < $limit) {
+			if ($step <= 0) {
+				throw new \LogicException('Step must be +ve');
+			}
 
-		for ($i = $start; $i <= $limit; $i += $step) {
-			yield $i;
-		}
-	} else {
-		if ($step >= 0) {
-			throw new LogicException('Step must be -ve');
-		}
+			for ($i = $start; $i <= $limit; $i += $step) {
+				yield $i;
+			}
+		} else {
+			if ($step >= 0) {
+				throw new \LogicException('Step must be -ve');
+			}
 
-		for ($i = $start; $i >= $limit; $i += $step) {
-			yield $i;
+			for ($i = $start; $i >= $limit; $i += $step) {
+				yield $i;
+			}
 		}
-	}
 	}
 
 	abstract public function seedSheet();
@@ -67,53 +67,57 @@ abstract class SeedCascade extends Seeder
 	 */
 	protected function getRanges(array $keys)
 	{
-	$ranges = [];
+		$ranges = [];
 
-	foreach ($keys as $key) {
-		if (!is_string($key)) {
-		throw new \Exception('Only range strings are suported.');
+		foreach ($keys as $key) {
+			$key .= '';
+
+			if (!is_string($key)) {
+				throw new \Exception('Only range strings are suported.');
+			}
+
+			$parts = explode('-', $key);
+
+			// If the user wants full cascading style
+			// only one number will seffice.
+			if (count($parts) === 1) {
+				list($start) = $parts;
+				$end = $start;
+			} else {
+				list($start, $end) = $parts;
+			}
+
+			// Converting Into Integers (was string)
+			$start *= 1;
+			$end *= 1;
+
+			// Seeder counting starts from 1
+			// (like database auto-increment IDs)
+			if ($start === 0) {
+				throw new \Exception('Starting of a range cannot be zero.');
+			}
+
+			if ($end === 0) {
+
+			// Runs a risk of infinite seeding
+			// as the ending point cannot be
+			// deduced from the ranges.
+			if ($this->count() === null) {
+				throw new \Exception('Set the `count` property. Risk of Infinite Seeding.');
+			} else {
+				$end = $this->count;
+			}
+			}
+
+			// Colliosions can and will happen.
+			if ($start > $end) {
+				throw new \Exception('The start of the range shouln\'t be greater than the end.');
+			}
+
+			$ranges[] = [$start, $end];
 		}
 
-		$parts = explode('-', $key);
-
-		// If the user wants full cascading style
-		// only one number will seffice.
-		if (count($parts) === 1) {
-		list($start) = $parts;
-		$end = $start;
-		} else {
-		list($start, $end) = $parts;
-		}
-
-		// Converting Into Integers (was string)
-		$start *= 1;
-		$end *= 1;
-
-		// Seeder counting starts from 1
-		// (like database auto-increment IDs)
-		if ($start === 0) {
-		throw new \Exception('Starting of a range cannot be zero.');
-		}
-
-		if ($end === 0) {
-
-		// Runs a risk of infinite seeding
-		// as the ending point cannot be
-		// deduced from the ranges.
-		if ($this->count() === null) {
-			throw new \Exception('Set the `count` property. Risk of Infinite Seeding.');
-		} else {
-			$end = $this->count;
-		}
-		}
-
-		// Colliosions can and will happen.
-		if ($end > $start) {
-		throw new \Exception('The start of the range shouln\'t be greater than the end.');
-		}
-
-		$ranges[] = [$start, $end];
-	}
+		return $ranges;
 	}
 
 	/**
@@ -162,7 +166,7 @@ abstract class SeedCascade extends Seeder
 	return $properties;
 	}
 
-	protected function resolveValue($i, $property, $offset, array $blocks)
+	public function resolveValue($i, $property, $offset, array $blocks)
 	{
 		// Current block
 		$block = $blocks[$offset];
@@ -188,17 +192,24 @@ abstract class SeedCascade extends Seeder
 		}
 	}
 
+	protected function insertData($i, array $data)
+	{
+		print_r($data);
+	}
+
 	public function run()
 	{
 		$sheet = $this->seedSheet();
 
+		$keys = array_keys($sheet);
+
 		// Numeric ranges deduced from the keys (range strings)
-		$raw_ranges = $this->getRanges(array_keys($sheet));
+		$raw_ranges = $this->getRanges($keys);
 
 		// Flattened ranges
 		$ranges = RangeSplitter::split($raw_ranges);
 
-		$this->deduceCount();
+		$this->deduceCount($ranges);
 		$count = $this->count();
 
 		// All the properties possible
@@ -211,12 +222,12 @@ abstract class SeedCascade extends Seeder
 			list($start, $end, $raw_keys) = $range;
 
 			// The blocks that apply to the iteration
-			$blocks = array_map(function ($raw_key) {
-				return $sheet[$raw_key];
+			$blocks = array_map(function ($raw_key) use (&$keys, &$sheet) {
+				return $sheet[$keys[$raw_key]];
 			}, $raw_keys);
 
 			// Loop over the flattened sub-ranges
-			foreach ($this->xrange($start, $end) as $x) {
+			foreach (range($start, $end) as $x) {
 
 				// limit the number of rows inserted
 				if ($i < $count) {
@@ -236,6 +247,8 @@ abstract class SeedCascade extends Seeder
 						$data[$property] = $value;
 					}
 				}
+
+				$this->insertData($i, $data);
 			}
 		}
 	}
