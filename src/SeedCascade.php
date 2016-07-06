@@ -162,6 +162,32 @@ abstract class SeedCascade extends Seeder
 	return $properties;
 	}
 
+	protected function resolveValue($i, $property, $offset, array $blocks)
+	{
+		// Current block
+		$block = $blocks[$offset];
+
+		// Look for the property in the current block
+		if (isset($block[$property])) {
+			$prop = $block[$property];
+
+			if (is_callable($prop)) {
+				$self = new SelfResolver($i, $offset, $blocks, $this);
+				$inherit = new Inheriter($i, $offset, $blocks, $this);
+
+				return $prop($i, $self, $inherit);
+			} else {
+				return $prop;
+			}
+		} else {
+			if ($offset > 0) {
+				return $this->resolveValue($i, $property, $offset-1, $blocks);
+			} else {
+				return null;
+			}
+		}
+	}
+
 	public function run()
 	{
 		$sheet = $this->seedSheet();
@@ -189,7 +215,7 @@ abstract class SeedCascade extends Seeder
 				return $sheet[$raw_key];
 			}, $raw_keys);
 
-			// Loop over the flattened sub-range
+			// Loop over the flattened sub-ranges
 			foreach ($this->xrange($start, $end) as $x) {
 
 				// limit the number of rows inserted
@@ -204,7 +230,7 @@ abstract class SeedCascade extends Seeder
 
 				// resolves property values from sheet block
 				foreach ($properties as $property) {
-					$value = $this->resolveValue($property, count($blocks)-1, $blocks);
+					$value = $this->resolveValue($i, $property, count($blocks)-1, $blocks);
 
 					if ($value !== null) {
 						$data[$property] = $value;
