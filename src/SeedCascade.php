@@ -175,11 +175,50 @@ abstract class SeedCascade extends Seeder
 		if (isset($block[$property])) {
 			$prop = $block[$property];
 
+			$self = new SelfResolver($i, $offset, $blocks, $this);
+			$inherit = new Inheriter($i, $offset, $blocks, $this);
+
 			if (is_callable($prop)) {
-				$self = new SelfResolver($i, $offset, $blocks, $this);
-				$inherit = new Inheriter($i, $offset, $blocks, $this);
 
 				return $prop($i, $self, $inherit);
+
+			} elseif (is_string($prop) && strpos($prop, '{') !== false) {
+
+				// Replace {self.*} and {inherit.*}
+				$a = preg_replace_callback(
+					'/\{(self|inherit)\.([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]+)\}/',
+					function ($matches) use (&$self, &$inherit) {
+						list($expression, $source, $property) = $matches;
+
+						if ($source === 'self') {
+							return $self->get($property);
+						} elseif ($source === 'inherit') {
+							return $inherit->get($property);
+						}
+					},
+					$prop
+				);
+
+				// Replace {i} with the current iteration number
+				$b = preg_replace('/\{i\}/', $i, $a);
+
+				// Replace {inherit} with the inherit value of higher blocks.
+				$c = preg_replace(
+					'/\{inherit\}/',
+					$inherit->get($property),
+					$b
+				);
+
+				// replace excaped curly braces
+				$d = preg_replace_callback(
+					'/\\\(\{|\})/',
+					function ($matches) {
+						return $matches[1];
+					},
+					$c
+				);
+
+				return $d;
 			} else {
 				return $prop;
 			}
