@@ -16,4 +16,19 @@ class Inheriter extends MagicResolver
             );
         }
     }
+
+    public function inherit()
+    {
+        return $this->get($this->property);
+    }
+
+    public function __invoke()
+    {
+        return $this->inherit();
+    }
+
+    public function __toString()
+    {
+        return $this->inherit();
+    }
 }
