@@ -12,10 +12,6 @@ abstract class SeedCascade extends Seeder
 	/**
 	 * Similar to range but is a generator
 	 *
-	 * Shamelessly copied from
-	 * http://php.net/manual/en/language.generators.overview.php
-	 * No ragretz.
-	 *
 	 * @param int $start	The start of the count
 	 * @param int $limit	The maximum value to count to
 	 *
@@ -23,24 +19,10 @@ abstract class SeedCascade extends Seeder
 	 *
 	 * @throws LogicException	if a step value is given that causes and infinite loop (for loop).
 	 */
-	protected function xrange($start, $limit, $step = 1)
+	protected function xrange($start, $limit)
 	{
-		if ($start < $limit) {
-			if ($step <= 0) {
-				throw new \LogicException('Step must be +ve');
-			}
-
-			for ($i = $start; $i <= $limit; $i += $step) {
-				yield $i;
-			}
-		} else {
-			if ($step >= 0) {
-				throw new \LogicException('Step must be -ve');
-			}
-
-			for ($i = $start; $i >= $limit; $i += $step) {
-				yield $i;
-			}
+		for ($i = $start; $i <= $limit; $i++) {
+			yield $i;
 		}
 	}
 
@@ -200,7 +182,7 @@ abstract class SeedCascade extends Seeder
 		// Replace {inherit} with the inherit value of higher blocks.
 		$prop = preg_replace(
 			'/\{inherit\}/',
-			$inherit->get($property),
+			$inherit(),
 			$prop
 		);
 
@@ -236,8 +218,8 @@ abstract class SeedCascade extends Seeder
 			$prop = $block[$property];
 
 			// Magic objects that allow relative value resolution
-			$self = new SelfResolver($i, $offset, $blocks, $this);
-			$inherit = new Inheriter($i, $offset, $blocks, $this);
+			$self = new SelfResolver($i, $property, $offset, $blocks, $this);
+			$inherit = new Inheriter($i, $property, $offset, $blocks, $this);
 
 			if (is_callable($prop)) {
 				return $prop($i, $self, $inherit);
@@ -315,7 +297,7 @@ abstract class SeedCascade extends Seeder
 			}, $raw_keys);
 
 			// Loop over the flattened sub-ranges
-			foreach (range($start, $end) as $x) {
+			foreach ($this->xrange($start, $end) as $x) {
 
 				// limit the number of rows inserted
 				if ($i < $count) {
