@@ -53,7 +53,7 @@ abstract class SeedCascade extends Seeder
 	 */
 	public function count()
 	{
-	return $this->count;
+		return $this->count;
 	}
 
 	/**
@@ -128,21 +128,21 @@ abstract class SeedCascade extends Seeder
 	 */
 	protected function deduceCount(array $ranges)
 	{
-	if ($this->count === null) {
-		$max = 0;
-		foreach ($ranges as $range) {
-		foreach ($range as $point) {
-			if ($point > $max) {
-			$max = $point;
+		if ($this->count === null) {
+			$max = 0;
+			foreach ($ranges as $range) {
+				foreach ($range as $point) {
+						if ($point > $max) {
+						$max = $point;
+					}
+				}
 			}
-		}
+
+			$this->count = $max;
+			return $max;
 		}
 
-		$this->count = $max;
-		return $max;
-	}
-
-	return $this->count;
+		return $this->count;
 	}
 
 	/**
@@ -153,19 +153,79 @@ abstract class SeedCascade extends Seeder
 	 */
 	protected function getProperties(array $sheet)
 	{
-	// Holds all the different properties that is insertable
-	$properties = [];
+		// Holds all the different properties that is insertable
+		$properties = [];
 
-	// Lists all the setable properties
-	foreach ($sheet as $block) {
-		foreach ($block as $property => $value) {
-		$properties[] = $property;
+		// Lists all the setable properties
+		foreach ($sheet as $block) {
+			foreach ($block as $property => $value) {
+				$properties[] = $property;
+			}
 		}
+
+		return $properties;
+		}
+
+	/**
+	 * Handles simple text imagesetinterpolation
+	 *
+	 * @param mixed $prop the value of the property
+	 * @param string $property the property name.
+	 * @param int $i the current iteration count.
+	 * @param SelfResolver $self the MagicResolver instance for self.
+	 * @param Inheriter $inherit the MagicResolver instance for inheritance.
+	 *
+	 * @return string  the string with all the data interpolated.
+	 */
+	protected function interpolateText($prop, $property, $i, SelfResolver $self, Inheriter $inherit)
+	{
+		// Replace {self.*} and {inherit.*}
+		$prop = preg_replace_callback(
+			'/\{(self|inherit)\.([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]+)\}/',
+			function ($matches) use (&$self, &$inherit) {
+				list($expression, $source, $property) = $matches;
+
+				if ($source === 'self') {
+					return $self->get($property);
+				} elseif ($source === 'inherit') {
+					return $inherit->get($property);
+				}
+			},
+			$prop
+		);
+
+		// Replace {i} with the current iteration number
+		$prop = preg_replace('/\{i\}/', $i, $prop);
+
+		// Replace {inherit} with the inherit value of higher blocks.
+		$prop = preg_replace(
+			'/\{inherit\}/',
+			$inherit->get($property),
+			$prop
+		);
+
+		// replace excaped curly braces
+		$prop = preg_replace_callback(
+			'/\\\(\{|\})/',
+			function ($matches) {
+				return $matches[1];
+			},
+			$prop
+		);
+
+		return $prop;
 	}
 
-	return $properties;
-	}
-
+	/**
+	 * Resolves the value of a property
+	 *
+	 * @param int $i    The current Iteration count.
+	 * @param string $property    The property name of the property to resolve.
+	 * @param int $offset    The block index from which to resolve the value.
+	 * @param array $blocks    The blocks to resolve from.
+	 *
+	 * @param mixed    The resolved value of the property.
+	 */
 	public function resolveValue($i, $property, $offset, array $blocks)
 	{
 		// Current block
@@ -175,50 +235,14 @@ abstract class SeedCascade extends Seeder
 		if (isset($block[$property])) {
 			$prop = $block[$property];
 
+			// Magic objects that allow relative value resolution
 			$self = new SelfResolver($i, $offset, $blocks, $this);
 			$inherit = new Inheriter($i, $offset, $blocks, $this);
 
 			if (is_callable($prop)) {
-
 				return $prop($i, $self, $inherit);
-
 			} elseif (is_string($prop) && strpos($prop, '{') !== false) {
-
-				// Replace {self.*} and {inherit.*}
-				$a = preg_replace_callback(
-					'/\{(self|inherit)\.([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]+)\}/',
-					function ($matches) use (&$self, &$inherit) {
-						list($expression, $source, $property) = $matches;
-
-						if ($source === 'self') {
-							return $self->get($property);
-						} elseif ($source === 'inherit') {
-							return $inherit->get($property);
-						}
-					},
-					$prop
-				);
-
-				// Replace {i} with the current iteration number
-				$b = preg_replace('/\{i\}/', $i, $a);
-
-				// Replace {inherit} with the inherit value of higher blocks.
-				$c = preg_replace(
-					'/\{inherit\}/',
-					$inherit->get($property),
-					$b
-				);
-
-				// replace excaped curly braces
-				$d = preg_replace_callback(
-					'/\\\(\{|\})/',
-					function ($matches) {
-						return $matches[1];
-					},
-					$c
-				);
-
-				return $d;
+				return $this->interpolateText($prop, $property, $i, $self, $inherit);
 			} else {
 				return $prop;
 			}
@@ -229,6 +253,31 @@ abstract class SeedCascade extends Seeder
 				return null;
 			}
 		}
+	}
+
+	/**
+	 * Bind a Closure to the current instance
+	 *
+	 * @param Closure $closure    The closure to bind.
+	 * @return Closure    A new closure instance that is bound to the current instance.
+	 */
+	public function local(Closure $closure)
+	{
+		return $closure->bindTo($this);
+	}
+
+	/**
+	 * Returns a Closure that calls a method on the current instance.
+	 *
+	 * @param string $method    The method name to call.
+	 * @return Closure    a Closure that calls a method on the current instance.
+	 */
+	public function method($method)
+	{
+		// Return a closure bound to the current instance.
+		return $this->local(function ($i, $self, $inherit) use ($method) {
+			$this->{$method}($i, $self, $inherit);
+		});
 	}
 
 	protected function insertData($i, array $data)
