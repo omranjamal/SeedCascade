@@ -5,26 +5,14 @@ use Illuminate\Database\Seeder;
 
 abstract class SeedCascade extends Seeder
 {
+	use Traits\RangeGeneration;
+	use Traits\RangeSanitization;
+	use Traits\CountDeduction;
+	use Traits\TextInterpolation;
+
 	public $count = null;
 	public $model = null;
 	public $table = null;
-
-	/**
-	 * Similar to range but is a generator
-	 *
-	 * @param int $start	The start of the count
-	 * @param int $limit	The maximum value to count to
-	 *
-	 * @return Generator	a generator object
-	 *
-	 * @throws LogicException	if a step value is given that causes and infinite loop (for loop).
-	 */
-	protected function xrange($start, $limit)
-	{
-		for ($i = $start; $i <= $limit; $i++) {
-			yield $i;
-		}
-	}
 
 	abstract public function seedSheet();
 
@@ -35,95 +23,6 @@ abstract class SeedCascade extends Seeder
 	 */
 	public function count()
 	{
-		return $this->count;
-	}
-
-	/**
-	 * Converts range strings to ranges arrays
-	 *
-	 * It also checks for errors or
-	 * inconsistencies in the ranges
-	 *
-	 * @param array $keys	Array of range strings.
-	 * @return array	Array of Range arrays
-	 */
-	protected function getRanges(array $keys)
-	{
-		$ranges = [];
-
-		foreach ($keys as $key) {
-			$key .= '';
-
-			if (!is_string($key)) {
-				throw new \Exception('Only range strings are suported.');
-			}
-
-			$parts = explode('-', $key);
-
-			// If the user wants full cascading style
-			// only one number will seffice.
-			if (count($parts) === 1) {
-				list($start) = $parts;
-				$end = $start;
-			} else {
-				list($start, $end) = $parts;
-			}
-
-			// Converting Into Integers (was string)
-			$start *= 1;
-			$end *= 1;
-
-			// Seeder counting starts from 1
-			// (like database auto-increment IDs)
-			if ($start === 0) {
-				throw new \Exception('Starting of a range cannot be zero.');
-			}
-
-			if ($end === 0) {
-
-			// Runs a risk of infinite seeding
-			// as the ending point cannot be
-			// deduced from the ranges.
-			if ($this->count() === null) {
-				throw new \Exception('Set the `count` property. Risk of Infinite Seeding.');
-			} else {
-				$end = $this->count;
-			}
-			}
-
-			// Colliosions can and will happen.
-			if ($start > $end) {
-				throw new \Exception('The start of the range shouln\'t be greater than the end.');
-			}
-
-			$ranges[] = [$start, $end];
-		}
-
-		return $ranges;
-	}
-
-	/**
-	 * Deduces the maximum count based on ranges
-	 *
-	 * @param array $ranges	The flattened ranges apecified.
-	 * @return int	The maximum count
-	 */
-	protected function deduceCount(array $ranges)
-	{
-		if ($this->count === null) {
-			$max = 0;
-			foreach ($ranges as $range) {
-				foreach ($range as $point) {
-						if ($point > $max) {
-						$max = $point;
-					}
-				}
-			}
-
-			$this->count = $max;
-			return $max;
-		}
-
 		return $this->count;
 	}
 
@@ -146,57 +45,8 @@ abstract class SeedCascade extends Seeder
 		}
 
 		return $properties;
-		}
-
-	/**
-	 * Handles simple text imagesetinterpolation
-	 *
-	 * @param mixed $prop the value of the property
-	 * @param string $property the property name.
-	 * @param int $i the current iteration count.
-	 * @param SelfResolver $self the MagicResolver instance for self.
-	 * @param Inheriter $inherit the MagicResolver instance for inheritance.
-	 *
-	 * @return string  the string with all the data interpolated.
-	 */
-	protected function interpolateText($prop, $property, $i, SelfResolver $self, Inheriter $inherit)
-	{
-		// Replace {self.*} and {inherit.*}
-		$prop = preg_replace_callback(
-			'/\{(self|inherit)\.([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]+)\}/',
-			function ($matches) use (&$self, &$inherit) {
-				list($expression, $source, $property) = $matches;
-
-				if ($source === 'self') {
-					return $self->get($property);
-				} elseif ($source === 'inherit') {
-					return $inherit->get($property);
-				}
-			},
-			$prop
-		);
-
-		// Replace {i} with the current iteration number
-		$prop = preg_replace('/\{i\}/', $i, $prop);
-
-		// Replace {inherit} with the inherit value of higher blocks.
-		$prop = preg_replace(
-			'/\{inherit\}/',
-			$inherit(),
-			$prop
-		);
-
-		// replace excaped curly braces
-		$prop = preg_replace_callback(
-			'/\\\(\{|\})/',
-			function ($matches) {
-				return $matches[1];
-			},
-			$prop
-		);
-
-		return $prop;
 	}
+
 
 	/**
 	 * Resolves the value of a property
