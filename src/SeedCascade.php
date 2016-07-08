@@ -9,6 +9,7 @@ abstract class SeedCascade extends Seeder
 	use Traits\RangeSanitization;
 	use Traits\CountDeduction;
 	use Traits\TextInterpolation;
+	use Traits\DataPersistence;
 
 	public $count = null;
 	public $model = null;
@@ -112,11 +113,6 @@ abstract class SeedCascade extends Seeder
 		});
 	}
 
-	protected function insertData($i, array $data)
-	{
-		print_r($data);
-	}
-
 	public function run()
 	{
 		$sheet = $this->seedSheet();
@@ -140,6 +136,14 @@ abstract class SeedCascade extends Seeder
 
 		foreach ($ranges as $range) {
 			list($start, $end, $raw_keys) = $range;
+
+			// Sort for specificity
+			usort($raw_keys, function ($a, $b) use (&$raw_ranges) {
+				list($a_start, $a_end) = $raw_ranges[$a];
+				list($b_start, $b_end) = $raw_ranges[$b];
+
+				return ($b_end-$b_start+1)-($a_end-$a_start+1);
+			});
 
 			// The blocks that apply to the iteration
 			$blocks = array_map(function ($raw_key) use (&$keys, &$sheet) {

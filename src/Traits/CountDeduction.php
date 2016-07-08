@@ -1,7 +1,8 @@
 <?php
 namespace Hedronium\SeedCascade\Traits;
 
-trait CountDeduction {
+trait CountDeduction
+{
     /**
      * Deduces the maximum count based on ranges
      *

@@ -4,7 +4,8 @@ namespace Hedronium\SeedCascade\Traits;
 use Hedronium\SeedCascade\SelfResolver;
 use Hedronium\SeedCascade\Inheriter;
 
-trait TextInterpolation {
+trait TextInterpolation
+{
     /**
 	 * Handles simple text imagesetinterpolation
 	 *

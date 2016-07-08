@@ -1,7 +1,8 @@
 <?php
 namespace Hedronium\SeedCascade\Traits;
 
-trait RangeGeneration {
+trait RangeGeneration
+{
     /**
      * Similar to range but is a generator
      *

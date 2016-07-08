@@ -1,7 +1,8 @@
 <?php
 namespace Hedronium\SeedCascade\Traits;
 
-trait RangeSanitization {
+trait RangeSanitization
+{
     /**
 	 * Converts range strings to ranges arrays
 	 *
@@ -45,14 +46,14 @@ trait RangeSanitization {
 
 			if ($end === 0) {
 
-			// Runs a risk of infinite seeding
-			// as the ending point cannot be
-			// deduced from the ranges.
-			if ($this->count() === null) {
-				throw new \Exception('Set the `count` property. Risk of Infinite Seeding.');
-			} else {
-				$end = $this->count;
-			}
+    			// Runs a risk of infinite seeding
+    			// as the ending point cannot be
+    			// deduced from the ranges.
+    			if ($this->count() === null) {
+    				throw new \Exception('Set the `count` property. Risk of Infinite Seeding.');
+    			} else {
+    				$end = $this->count;
+    			}
 			}
 
 			// Colliosions can and will happen.
