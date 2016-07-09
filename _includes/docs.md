@@ -86,6 +86,8 @@ class DatabaseSeeder extends SeedCascade {
 
 Seeding definitions are contained in an associative array. The keys act as the ranges of the seeding data (eg. `"1-10"` means the first 10 rows inserted), pointing to another associative array consisting of key value pairs.
 
+<div id="using-model"></div>
+
 ##### Using a Model
 
 ```PHP
@@ -102,6 +104,8 @@ class DatabaseSeeder extends SeedCascade {
 
 ```
 
+<div id="multiple-ranges"></div>
+
 ##### Multiple Ranges
 
 Multiple ranges can also be specified.
@@ -112,6 +116,8 @@ return [
     '11-20' => ['name' => 'Tomato']
 ]
 ```
+
+<div id="overlapping-ranges"></div>
 
 ##### Overlapping Ranges
 
@@ -304,7 +310,7 @@ return [
 
 the last 5 rows will have a name of `'Red Flower'` **NOT** _`'Yellow Flower'`_
 
-<div id="interation-count"></div>
+<div id="iteration-count"></div>
 
 ###### Iteration Count
 
@@ -348,7 +354,7 @@ Closures recieve 3 parameters.
 - `$self` - An object taht lets you access other field values.
 - `$inherit` - An objects that allows you to inherit field values.
 
-<div id="inhierit"></div>
+<div id="iteration-count-param"></div>
 
 ###### $i
 

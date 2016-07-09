@@ -42,51 +42,88 @@ pre {
     padding: 2em;
 }
 
+h3, h4, h5, h6 {
+    color: rgba(255, 255, 255, 1);
+    text-transform: uppercase;
+    font-weight: 700;
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 0.07em;
+
+    margin-top: 3em;
+    margin-bottom: 0.5em !important;
+
+    &:before {
+      content: "#";
+      font-family: 'Open Sans';
+      font-weight: lighter;
+      color: rgba(255,255,255,0.2);
+      font-size: 1.2em;
+    }
+}
+
+h3 {
+    // margin-top: 3.5em;
+    font-size: 2.2em;
+}
+
+h4 {
+    // margin-top: 3em;
+    font-size: 1.7em;
+}
+
+h5 {
+    // margin-top: 2.5em;
+    font-size: 1.2em;
+}
+
+h6 {
+    text-transform: none;
+    color: #FFEDB9;
+    // margin-top: 2em;
+    font-weight: 400;
+    font-size: 1em;
+}
+
+.DocContents {
+  // background: transparentize(black, 0.8);
+  border-radius: 0.4em;
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 1.5em;
+  }
+
+  a {
+    color: #59B0CC;
+    text-decoration: none;
+
+    &:hover, &.active {
+      color: white;
+    }
+
+    &.active {
+      font-weight: bold;
+    }
+  }
+
+  li {
+    padding: 0.2em 0;
+  }
+
+  & > ul {
+    margin: 0;
+    padding: 0;
+
+    & > li {
+      margin-top: 1em;
+    }
+  }
+}
+
 .DocText {
     color: rgba(255, 255, 255, 0.8);
     line-height: 1.4em;
-
-    h3, h4, h5, h6 {
-        color: rgba(255, 255, 255, 1);
-        text-transform: uppercase;
-        font-weight: 700;
-        font-family: 'Oswald', sans-serif;
-        letter-spacing: 0.07em;
-
-        margin-top: 3em;
-        margin-bottom: 0.5em !important;
-
-        &:before {
-          content: "#";
-          font-family: 'Open Sans';
-          font-weight: lighter;
-          color: rgba(255,255,255,0.2);
-          font-size: 1.2em;
-        }
-    }
-
-    h3 {
-        // margin-top: 3.5em;
-        font-size: 2.2em;
-    }
-
-    h4 {
-        // margin-top: 3em;
-        font-size: 1.7em;
-    }
-
-    h5 {
-        // margin-top: 2.5em;
-        font-size: 1.2em;
-    }
-
-    h6 {
-        text-transform: none;
-        color: #FFEDB9;
-        // margin-top: 2em;
-        font-weight: 400;
-        font-size: 1em;
-    }
 
     em {
       color: rgba(255, 255, 255, 0.5);
