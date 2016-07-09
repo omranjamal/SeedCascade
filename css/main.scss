@@ -66,7 +66,7 @@ pre {
     font-size: 1.1em;
     background: rgb(42,28,45);
 
-    @include angled-edge('outside top','upper right', rgb(42,28,45), $height: 70);
+    @include angled-edge('outside top','upper right', rgb(42,28,45), $height: 100);
 }
 
 .DocContents, .DocText {
@@ -257,5 +257,23 @@ h6 {
   .Tagline {
     color: #7D641A;
     font-weight: 100;
+  }
+
+  .Github {
+    display: none;
+
+    @include at('small') {
+      display: block;
+    }
+
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    max-width:8em;
+
+    img {
+      width: 100%;
+    }
   }
 }
