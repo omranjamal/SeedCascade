@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1"/>
+        <title>SeedCascade</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/styles/dracula.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Oswald:400,700" rel="stylesheet">
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+    <body>
+        {{content}}
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/languages/bash.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/highlight.min.js"></script>
+
+
+        <script>
+            hljs.configure({
+                // useBR: true
+            });
+
+            $(function () {
+                $('pre > code').each(function (i, block) {
+                    var language = $(block).attr('class').split('-')[1];
+                    $(block).addClass(language.toLowerCase());
+
+                    hljs.highlightBlock(block);
+                });
+            });
+        </script>
+    </body>
+</html>

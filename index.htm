@@ -1,0 +1,21 @@
+---
+layout: default
+---
+<section class="Jumbotron">
+    <h1>SeedCascade</h1>
+</section>
+<section class="Docs">
+    <div class="container">
+        <h2>Docs</h2>
+        <div class="DocContents l-m8-pus l-m4">
+            <h3>Contents</h3>
+        </div>
+        <div class="DocText l-m4-pul l-m8">
+            {% capture docs %}
+                {% include docs.md %}
+            {% endcapture %}
+
+            {{ docs | markdownify }}
+        </div>
+    </div>
+</section>

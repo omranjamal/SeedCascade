@@ -1,0 +1,63 @@
+%grid-column-floater {
+  float: left;
+}
+
+%grid-column-overrided {
+  position: relative;
+}
+
+@if $grid-classes-generate {
+  .#{$grid-container-class} {
+    @include container;
+  }
+
+  .#{$grid-row-class} {
+    @extend %grid-clear-fix;
+  }
+
+  @each $point, $abbr in $grid-responsive-abbreviations {
+    @for $i from 1 through $grid-columns {
+      .#{$grid-responsive-abbreviations-prefix}#{$abbr}#{$grid-responsive-abbreviations-suffix}#{$i}#{$grid-responsive-class-suffix} {
+        @extend %grid-column-floater;
+      }
+
+      @if $grid-generate-pushpull-classes {
+        .#{$grid-responsive-abbreviations-prefix}#{$abbr}#{$grid-responsive-abbreviations-suffix}#{$i}#{$grid-responsive-push-suffix}#{$grid-responsive-class-suffix} {
+          @extend %grid-column-overrided;
+        }
+
+        .#{$grid-responsive-abbreviations-prefix}#{$abbr}#{$grid-responsive-abbreviations-suffix}#{$i}#{$grid-responsive-pull-suffix}#{$grid-responsive-class-suffix} {
+          @extend %grid-column-overrided;
+        }
+      }
+    }
+
+    @include at($point) {
+      @for $i from 1 through $grid-columns {
+        .#{$grid-responsive-abbreviations-prefix}#{$abbr}#{$grid-responsive-abbreviations-suffix}#{$i}#{$grid-responsive-class-suffix} {
+          @include span($i, $set-float: false);
+        }
+
+        @if $grid-generate-pushpull-classes {
+          .#{$grid-responsive-abbreviations-prefix}#{$abbr}#{$grid-responsive-abbreviations-suffix}#{$i}#{$grid-responsive-push-suffix}#{$grid-responsive-class-suffix} {
+            @include push($i, $set-pos: false);
+          }
+
+          .#{$grid-responsive-abbreviations-prefix}#{$abbr}#{$grid-responsive-abbreviations-suffix}#{$i}#{$grid-responsive-pull-suffix}#{$grid-responsive-class-suffix} {
+            @include pull($i, $set-pos: false);
+          }
+        }
+
+        @if $grid-generate-presuf-classes {
+          .#{$grid-responsive-abbreviations-prefix}#{$abbr}#{$grid-responsive-abbreviations-suffix}#{$i}#{$grid-responsive-prefix-suffix}#{$grid-responsive-class-suffix} {
+            @include prefix($i);
+          }
+
+          .#{$grid-responsive-abbreviations-prefix}#{$abbr}#{$grid-responsive-abbreviations-suffix}#{$i}#{$grid-responsive-suffix-suffix}#{$grid-responsive-class-suffix} {
+            @include suffix($i);
+          }
+        }
+      }
+    };
+  }
+}

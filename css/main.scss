@@ -1,0 +1,138 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+---
+$grid-classes-generate: true;
+@import "sass-lattice/Lattice";
+
+html {
+  box-sizing: border-box;
+  font-family: 'Open Sans';
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.Warning {
+  padding: 1em 2em;
+  background: #FF4F3D;
+}
+
+pre {
+    margin: 2em 0;
+
+    & > code {
+        // border: 1px solid rgb(20, 0, 22);
+        padding: 1.5em 2em !important;
+
+        background-clip: padding-box;
+        -webkit-background-clip: padding-box;
+
+        border-radius: 0.4em;
+        box-shadow: 0 0.3em 0 0 rgba(0,0,0,0.3);
+    }
+}
+
+.Docs {
+    font-size: 1.1em;
+    background: rgb(42,28,45);
+}
+
+.DocContents, .DocText {
+    padding: 2em;
+}
+
+.DocText {
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.4em;
+
+    h3, h4, h5, h6 {
+        color: rgba(255, 255, 255, 1);
+        text-transform: uppercase;
+        font-weight: 700;
+        font-family: 'Oswald', sans-serif;
+        letter-spacing: 0.07em;
+
+        margin-top: 3em;
+        margin-bottom: 0.5em !important;
+
+        &:before {
+          content: "#";
+          font-family: 'Open Sans';
+          font-weight: lighter;
+          color: rgba(255,255,255,0.2);
+          font-size: 1.2em;
+        }
+    }
+
+    h3 {
+        // margin-top: 3.5em;
+        font-size: 2.2em;
+    }
+
+    h4 {
+        // margin-top: 3em;
+        font-size: 1.7em;
+    }
+
+    h5 {
+        // margin-top: 2.5em;
+        font-size: 1.2em;
+    }
+
+    h6 {
+        text-transform: none;
+        color: #FFEDB9;
+        // margin-top: 2em;
+        font-weight: 400;
+        font-size: 1em;
+    }
+
+    em {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    p {
+      &:first-letter {
+        // margin-left: 2em;
+      }
+    }
+
+    *:not(pre) code {
+      background: rgba(255,206,32,.3);
+      padding: 0.1em 0.3em;
+      border-radius: 0.2em;
+      color: white;
+    }
+
+    a {
+      color: #FFCD37;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    ul {
+      list-style: none;
+
+      li {
+        padding-left: 1em;
+        text-indent: -.7em;
+
+        &:before {
+          content: "■ ";
+          // margin-right: 0.6em;
+          color: rgba(255, 255, 255, 0.3);
+        }
+      }
+    }
+
+    blockquote {
+      margin: 2em 0;
+      padding: 0.1em 2em 0.1em;
+      border-left: 0.3em solid #FFC658;
+      background: transparentize(white, 0.9);
+    }
+}

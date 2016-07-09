@@ -1,0 +1,94 @@
+%grid-clear-fix {
+  *zoom: 1;
+
+  &:before, &:after {
+    content: " ";
+    display: table;
+  }
+
+  &:after {
+    clear: both;
+  }
+}
+
+@function grid-width-percentage($a, $columns: $grid-columns) {
+  $width: 0%;
+
+  @if unit($a) == "%" {
+		$width: $a;
+	} @elseif unitless($a) and $a <= $columns {
+		$width: percentage($a/$columns);
+	} @elseif unitless($a) and $a > $columns {
+		$width: pergentage($a);
+	}
+
+  @return $width;
+}
+
+@mixin container($width: $grid-container-defualt-width, $center: true) {
+	@extend %grid-clear-fix;
+	width: $width;
+
+	@if $center {
+		margin: auto;
+	}
+}
+
+@mixin clear {
+	@extend .clear;
+}
+
+@mixin span($a, $columns: $grid-columns, $set-float: true) {
+  width: grid-width-percentage($a, $columns);
+
+  @if $set-float {
+    float: left;
+  }
+}
+
+@mixin centered-span($a, $columns: $grid-columns) {
+	margin: auto;
+	width: grid-width-percentage($a, $columns);
+}
+
+@mixin push($a, $columns: $grid-columns, $set-pos: true) {
+  left: grid-width-percentage($a, $columns);
+
+  @if $set-pos {
+    position: relative;
+  }
+}
+
+@mixin pull($a, $columns: $grid-columns, $set-pos: true) {
+  right: grid-width-percentage($a, $columns);
+
+  @if $set-pos {
+    position: relative;
+  }
+}
+
+@mixin prefix($a, $columns: $grid-columns) {
+	margin-left: grid-width-percentage($a, $columns);
+}
+
+@mixin suffix($a, $columns: $grid-columns) {
+	margin-right: grid-width-percentage($a, $columns);
+}
+
+@mixin pad($size, $vertical: false) {
+	$horizontal: $size/2;
+
+	@if type-of($vertical) == "number" {
+		$vertical: $vertical/2;
+	} @else {
+		$vertical: $horizontal;
+	}
+
+	@if $vertical {
+		padding: $vertical $horizontal;
+	}
+}
+
+@mixin last() {
+	float: right;
+}

@@ -1,0 +1,41 @@
+$grid-columns: 12 !default;
+$grid-container-defualt-width: 85% !default;
+
+$grid-responsive-breakpoints: (
+	xsmall: 0em,
+	small: 40em,
+	medium: 64em,
+	large: 90em,
+	xlarge: 120em
+) !default;
+
+$grid-generate-responsive-order: false !default;
+$grid-classes-generate: false !default;
+
+$grid-responsive-abbreviations: (
+	xsmall: "xs",
+	small: "s",
+	medium: "m",
+	large: "l",
+	xlarge: "xl",
+) !default;
+
+$grid-container-class: 'container' !default;
+$grid-row-class: 'row' !default;
+
+$grid-responsive-abbreviations-prefix: 'l-' !default;
+$grid-responsive-abbreviations-suffix: '' !default;
+
+$grid-generate-pushpull-classes: true !default;
+$grid-responsive-push-suffix: '-pus' !default;
+$grid-responsive-pull-suffix: '-pul' !default;
+
+$grid-generate-presuf-classes: true !default;
+$grid-responsive-prefix-suffix: '-pre' !default;
+$grid-responsive-suffix-suffix: '-suf' !default;
+
+$grid-responsive-class-suffix: '' !default;
+
+@import "src/grid";
+@import "src/responsive";
+@import "src/grid-classes";
