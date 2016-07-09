@@ -213,6 +213,16 @@ h6 {
       border-left: 0.3em solid #FFC658;
       background: transparentize(white, 0.9);
     }
+
+    table {
+      width: 100%;
+      // border: 1px solid white;
+
+      td {
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        padding: 0.5em;
+      }
+    }
 }
 
 .Jumbotron {

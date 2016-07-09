@@ -9,20 +9,33 @@ Heres what your new Seeder classes would look like.
 use Hedronium\SeedCascade\SeedCascade;
 
 class DatabaseSeeder extends SeedCascade {
-  public $table = "fruits";
+  public $table = "food";
 
   public function seedSheet() {
     return [
-      '1-10' => [
-        'name' => 'Potao'
+      '1-6' => [
+        'name' => 'Cabbage',
+        'type' => 'vegetable'
+      ],
+      '4-6' => [
+        'name' => 'Carrot'
       ]
     ];
   }
 }
-
 ```
+Inserted Data in `food` table:
 
-It inserts 10 rows into the `fruits` table, with the name column being set to "tomato" on all of them.
+| name    | type      |
+|---------|-----------|
+| Cabbage | vegetable |
+| Cabbage | vegetable |
+| Cabbage | vegetable |
+| Carrot  | vegetable |
+| Carrot  | vegetable |
+| Carrot  | vegetable |
+
+It inserts 6 rows into the `food` table, with the name column being set to "Cabbage" on the first three and "Carrot" on the last three.
 
 <div id="features-list"></div>
 
