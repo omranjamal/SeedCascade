@@ -34,6 +34,8 @@ h2 {
   font-family: 'Oswald', sans-serif;
   letter-spacing: 0.07em;
 
+  word-break: break-all;
+
   position: relative;
   bottom: 6em;
 
@@ -51,7 +53,6 @@ pre {
     margin: 2em 0;
 
     & > code {
-        // border: 1px solid rgb(20, 0, 22);
         padding: 1.5em 2em !important;
 
         background-clip: padding-box;
@@ -77,9 +78,16 @@ pre {
     }
 
     bottom: 3em;
+
+    font-size: 0.9em;
+
+    @include at('small') {
+        font-size: 1.1em;
+    }
 }
 
 h3, h4, h5, h6 {
+    line-height: 1.2em;
     color: rgba(255, 255, 255, 1);
     text-transform: uppercase;
     font-weight: 700;
