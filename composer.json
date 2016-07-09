@@ -1,5 +1,8 @@
 {
 	"name": "hedronium/seed-cascade",
+	"description": "A range based Cascading Seeder for Laravel.",
+	"keywords": ["range", "cascading", "seeder", "seeding", "laravel"],
+	"homepage": "http://hedronium.github.io/SeedCascade/",
 	"type": "library",
 	"license": "MIT",
 	"authors": [
