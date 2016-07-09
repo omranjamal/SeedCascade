@@ -2,11 +2,20 @@
 layout: default
 ---
 <section class="Jumbotron">
-    <h1>SeedCascade</h1>
+    <h1 class="hidden">SeedCascade</h1>
+    <div class="Logo">
+      <img src="images/logo.svg" alt="SeedCascade Logo">
+    </div>
+    <div class="Parent">
+      by <a href="//hedronium.github.io">Hedronium</a>.
+    </div>
+    <div class="Tagline">
+      A Cascading Seeder, because <br> seeding is <strong>Laravel</strong> is 'Icky'.
+    </div>
 </section>
 <section class="Docs">
     <div class="container">
-        <h2>Docs</h2>
+        <h2><span>Docs</span></h2>
         <div class="DocContents l-m8-pus l-m4">
             <ul>
               <li>
@@ -77,7 +86,7 @@ layout: default
               </li>
             </ul>
         </div>
-        <div class="DocText l-m4-pul l-m8">
+        <div class="DocText l-xs12 l-m8 l-m4-pul">
             {% capture docs %}
                 {% include docs.md %}
             {% endcapture %}

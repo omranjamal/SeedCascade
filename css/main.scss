@@ -3,6 +3,11 @@
 ---
 $grid-classes-generate: true;
 @import "sass-lattice/Lattice";
+@import "angled-edges";
+
+.hidden {
+  display: none;
+}
 
 html {
   box-sizing: border-box;
@@ -16,6 +21,30 @@ html {
 .Warning {
   padding: 1em 2em;
   background: #FF4F3D;
+}
+
+
+h2 {
+  font-size: 1em;
+  text-align: center;
+  z-index: 100;
+  color: rgba(255, 255, 255, 1);
+  text-transform: uppercase;
+  font-weight: 700;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.07em;
+
+  position: relative;
+  bottom: 6em;
+
+  span {
+    font-size: 2.5em;
+    display: inline-block;
+    padding: 0.5em 1em;
+    background: #000;
+
+    transform: skewX(10deg);
+  }
 }
 
 pre {
@@ -36,10 +65,18 @@ pre {
 .Docs {
     font-size: 1.1em;
     background: rgb(42,28,45);
+
+    @include angled-edge('outside top','upper right', rgb(42,28,45), $height: 70);
 }
 
 .DocContents, .DocText {
-    padding: 2em;
+    position: relative;
+
+    @include at('medium') {
+      padding: 2em;
+    }
+
+    bottom: 3em;
 }
 
 h3, h4, h5, h6 {
@@ -62,30 +99,36 @@ h3, h4, h5, h6 {
 }
 
 h3 {
-    // margin-top: 3.5em;
     font-size: 2.2em;
 }
 
+h3:nth-child(2) {
+  margin-top: 0 !important;
+}
+
 h4 {
-    // margin-top: 3em;
     font-size: 1.7em;
 }
 
 h5 {
-    // margin-top: 2.5em;
     font-size: 1.2em;
 }
 
 h6 {
     text-transform: none;
     color: #FFEDB9;
-    // margin-top: 2em;
     font-weight: 400;
     font-size: 1em;
 }
 
 .DocContents {
-  // background: transparentize(black, 0.8);
+  display: none;
+
+  @include at('medium') {
+    display: block;
+  }
+
+  // padding-top: 4em;
   border-radius: 0.4em;
 
   ul {
@@ -131,7 +174,6 @@ h6 {
 
     p {
       &:first-letter {
-        // margin-left: 2em;
       }
     }
 
@@ -160,7 +202,6 @@ h6 {
 
         &:before {
           content: "■ ";
-          // margin-right: 0.6em;
           color: rgba(255, 255, 255, 0.3);
         }
       }
@@ -172,4 +213,49 @@ h6 {
       border-left: 0.3em solid #FFC658;
       background: transparentize(white, 0.9);
     }
+}
+
+.Jumbotron {
+  min-height: 30em;
+  background: #FFC844;
+  padding: 2em 2em 10em 2em;
+
+  .Logo {
+    text-align: center;
+
+    img {
+      width: 100%;
+      max-width: 18em;
+    }
+  }
+
+  .Tagline, .Parent {
+    text-align: center;
+    font-size: 1.5em;
+    margin: auto;
+    max-width: 18em;
+  }
+
+  .Parent {
+    font-size: 0.9em;
+    text-transform: uppercase;
+    position: relative;
+    bottom: 0.6em;
+
+    a {
+      font-weight: bold;
+      color: #96192C;
+      text-decoration: none;
+
+      &:hover {
+        background: #96192C;
+        color: white;
+      }
+    }
+  }
+
+  .Tagline {
+    color: #7D641A;
+    font-weight: 100;
+  }
 }
