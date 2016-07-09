@@ -21,7 +21,7 @@ trait TextInterpolation
 	{
 		// Replace {self.*} and {inherit.*}
 		$prop = preg_replace_callback(
-			'/\{(self|inherit)\.([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]+)\}/',
+			'/\{(self|inherit)\.([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]{0,100})\}/',
 			function ($matches) use (&$self, &$inherit) {
 				list($expression, $source, $property) = $matches;
 

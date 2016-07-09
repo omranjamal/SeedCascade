@@ -94,7 +94,7 @@ abstract class SeedCascade extends Seeder
 	 * @param Closure $closure    The closure to bind.
 	 * @return Closure    A new closure instance that is bound to the current instance.
 	 */
-	public function local(Closure $closure)
+	public function local(\Closure $closure)
 	{
 		return $closure->bindTo($this);
 	}
@@ -109,7 +109,7 @@ abstract class SeedCascade extends Seeder
 	{
 		// Return a closure bound to the current instance.
 		return $this->local(function ($i, $self, $inherit) use ($method) {
-			$this->{$method}($i, $self, $inherit);
+			return $this->{$method}($i, $self, $inherit);
 		});
 	}
 

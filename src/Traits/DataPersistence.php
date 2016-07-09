@@ -1,6 +1,8 @@
 <?php
 namespace Hedronium\SeedCascade\Traits;
 
+use DB;
+
 trait DataPersistence
 {
     /**
