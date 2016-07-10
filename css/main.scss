@@ -9,6 +9,10 @@ $grid-classes-generate: true;
   display: none;
 }
 
+a {
+    transition: all 200ms;
+}
+
 html {
   box-sizing: border-box;
   font-family: 'Open Sans';
@@ -72,7 +76,7 @@ pre {
 
 .DocContents, .DocText {
     text-shadow: -0.1em 0.1em 0 rgba(0,0,0,0.3);
-    
+
     position: relative;
 
     @include at('medium') {
