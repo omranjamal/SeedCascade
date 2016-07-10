@@ -71,6 +71,8 @@ pre {
 }
 
 .DocContents, .DocText {
+    text-shadow: -0.1em 0.1em 0 rgba(0,0,0,0.3);
+    
     position: relative;
 
     @include at('medium') {
@@ -87,6 +89,7 @@ pre {
 }
 
 h3, h4, h5, h6 {
+    text-shadow: -0.1em 0.1em 0 rgba(0,0,0,0.3);
     line-height: 1.2em;
     color: rgba(255, 255, 255, 1);
     text-transform: uppercase;
