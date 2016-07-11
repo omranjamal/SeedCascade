@@ -183,6 +183,14 @@ h6 {
     color: rgba(255, 255, 255, 0.8);
     line-height: 1.4em;
 
+    ::-moz-selection {
+        background: transparentize(#FFC844, 0.4);
+    }
+
+    ::selection {
+        background: transparentize(#FFC844, 0.4);
+    }
+
     em {
       color: rgba(255, 255, 255, 0.5);
     }
