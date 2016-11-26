@@ -249,6 +249,55 @@ return [
 ]
 ```
 
+<div id="array"></div>
+
+#### Array
+
+This ones pretty simple too. We type is multiple values as an array.
+
+```PHP
+return [
+  '1-4' => [
+    'type' => 'fruit',
+    'name' => $this->arr([
+      'tomato',
+      'mango',
+      'lichee',
+      'pineapple'
+    ])
+  ]
+]
+```
+
+If the range is larger than the number of array elements (like `1-6`),
+then `null` will be returned.
+
+There is also an optional second parameter. It's called `$wrap`.
+If you set it to `true`, the seeder will just start from the
+beginning again.
+
+```PHP
+return [
+  '1-5' => [
+    'type' => 'fruit',
+      'name' => $this->arr([
+        'fruit X',
+        'fruit Y'
+    ], true)
+  ]
+]
+```
+
+will result in
+
+| name    | type      |
+|---------|-----------|
+| fruit X | fruit     |
+| fruit Y | fruit     |
+| fruit X | fruit     |
+| fruit Y | fruit     |
+| fruit X | fruit     |
+
 <div id="string-interpolation"></div>
 
 ##### String Interpolation
