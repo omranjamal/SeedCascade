@@ -15,7 +15,7 @@ trait CountDeduction
             $max = 0;
             foreach ($ranges as $range) {
                 foreach ($range as $point) {
-                        if ($point > $max) {
+                    if ($point > $max) {
                         $max = $point;
                     }
                 }

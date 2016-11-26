@@ -113,6 +113,32 @@ abstract class SeedCascade extends Seeder
 		});
 	}
 
+	/**
+	 * Returns a Closure that returns an element of an array.
+	 *
+	 * @param array $arr       The array to pop values out of.
+	 * @return boolean $wrap   Should the values wrap back to the beginning if the index overflows.
+	 */
+	public function arr(array $arr, $wrap = false)
+	{
+		$counter = 0;
+		$total = count($arr);
+
+		if ($wrap) {
+			return function () use ($arr, &$counter, $total) {
+				return $arr[($counter++)%$total];
+			};
+		} else {
+			return function () use ($arr, &$counter, $total) {
+				if ($counter >= $total) {
+					return null;
+				}
+
+				return $arr[$counter++];
+			};
+		}
+	}
+
 	public function run()
 	{
 		$sheet = $this->seedSheet();
